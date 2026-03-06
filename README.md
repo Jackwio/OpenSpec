@@ -3,6 +3,9 @@
 Original project:
 https://github.com/Fission-AI/OpenSpec.git
 
+License: MIT
+Copyright (c) 2024 OpenSpec Contributors
+
 <p align="center">
   <a href="https://github.com/Fission-AI/OpenSpec">
     <picture>
