@@ -1,8 +1,8 @@
-## 新增要求
+## ADDED Requirements
 
-### 要求： <!-- requirement name -->
+### Requirement: <!-- requirement name -->
 <!-- requirement text -->
 
-#### 設想： <!-- scenario name -->
-- **什麼時候** <!-- condition -->
-- **然後** <!-- expected outcome -->
+#### Scenario: <!-- scenario name -->
+- **WHEN** <!-- condition -->
+- **THEN** <!-- expected outcome -->

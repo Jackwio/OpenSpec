@@ -1,44 +1,44 @@
-# CLI 存檔命令 - 更改
+# CLI Archive Command - Changes
 
-## 修改後的要求
+## MODIFIED Requirements
 
-### 要求：規格更新流程
+### Requirement: Spec Update Process
 
-在將變更移至存檔之前，該命令應將增量變更套用至主要規格以反映部署的實際情況。
+Before moving the change to archive, the command SHALL apply delta changes to main specs to reflect the deployed reality.
 
-#### 場景：應用增量更改
+#### Scenario: Applying delta changes
 
-- **何時** 使用基於增量的規範歸檔變更
+- **WHEN** archiving a change with delta-based specs
 - **THEN** parse and apply delta changes as defined in openspec-conventions
-- **並且**在應用之前驗證所有操作
+- **AND** validate all operations before applying
 
-#### 場景：驗證增量更改
+#### Scenario: Validating delta changes
 
-- **何時** 處理增量更改
-- **然後** 依照 openspec-conventions 中指定的方式執行驗證
-- **並且** 如果驗證失敗，則顯示特定錯誤併中止
+- **WHEN** processing delta changes
+- **THEN** perform validations as specified in openspec-conventions
+- **AND** if validation fails, show specific errors and abort
 
-#### 場景：衝突偵測
+#### Scenario: Conflict detection
 
-- **何時** 應用增量會建立重複的需求標頭
-- **然後** 中止並顯示衝突的錯誤訊息
-- **並**建議手動解決
+- **WHEN** applying deltas would create duplicate requirement headers
+- **THEN** abort with error message showing the conflict
+- **AND** suggest manual resolution
 
-## 新增要求
+## ADDED Requirements
 
-### 要求：顯示輸出
+### Requirement: Display Output
 
-該命令應提供有關增量操作的明確回饋。
+The command SHALL provide clear feedback about delta operations.
 
-#### 場景：顯示增量應用程式
+#### Scenario: Showing delta application
 
-- **何時**套用增量更改
-- **然後** 顯示每個規格：
-  - 增加的要求數量
-  - 修改的要求數量
-  - 刪除的要求數量
-  - 重命名的需求數量
-- **AND** 使用 openspec-conventions 中定義的標準輸出符號 (+ ~ - →)：
+- **WHEN** applying delta changes
+- **THEN** display for each spec:
+  - Number of requirements added
+  - Number of requirements modified
+  - Number of requirements removed
+  - Number of requirements renamed
+- **AND** use standard output symbols (+ ~ - →) as defined in openspec-conventions:
   ```
   Applying changes to specs/user-auth/spec.md:
     + 2 added

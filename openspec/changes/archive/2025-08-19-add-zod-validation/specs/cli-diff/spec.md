@@ -1,12 +1,12 @@
-## 新增要求
+## ADDED Requirements
 
-### 要求：Diff 指令增強
+### Requirement: Diff Command Enhancement
 
-diff 命令應在顯示差異之前驗證更改結構。
+The diff command SHALL validate change structure before displaying differences.
 
-#### 場景：在 diff 之前驗證
+#### Scenario: Validate before diff
 
-- **何時**執行 `openspec diff change-name`
-- **然後** 驗證變更結構
-- **並且** 顯示驗證警告（如果存在）
-- **並** 繼續顯示差異
+- **WHEN** executing `openspec diff change-name`
+- **THEN** validate change structure
+- **AND** show validation warnings if present
+- **AND** continue with diff display

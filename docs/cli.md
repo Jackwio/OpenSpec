@@ -1,97 +1,97 @@
-# CLI參考
+# CLI Reference
 
-OpenSpec CLI (`openspec`）提供專案設定、驗證、狀態檢查和管理的終端命令。這些命令補充了 AI 斜線命令（例如 `/opsx:propose`）記錄在 [命令](commands.md).
+The OpenSpec CLI (`openspec`) provides terminal commands for project setup, validation, status inspection, and management. These commands complement the AI slash commands (like `/opsx:propose`) documented in [Commands](commands.md).
 
-## 概括
+## Summary
 
-| 類別 | 命令 | 目的 |
+| Category | Commands | Purpose |
 |----------|----------|---------|
-| **設定** | `init`, `update` | 初始化並更新專案中的 OpenSpec |
-| **瀏覽** | `list`, `view`, `show` | Explore changes and specs |
-| **Validation** | `validate` | 檢查變更和規格是否有問題 |
-| **生命週期** | `archive` | 完成已完成的更改 |
-| **Workflow** | `status`, `instructions`, `templates`, `schemas` | 工件驅動的工作流程支援 |
-| **模式** | `schema init`, `schema fork`, `schema validate`, `schema which` | 建立和管理自訂工作流程 |
-| **設定** | `config` | 檢視和修改設定 |
-| **公用事業** | `feedback`, `completion` | 回饋和 shell 集成 |
+| **Setup** | `init`, `update` | Initialize and update OpenSpec in your project |
+| **Browsing** | `list`, `view`, `show` | Explore changes and specs |
+| **Validation** | `validate` | Check changes and specs for issues |
+| **Lifecycle** | `archive` | Finalize completed changes |
+| **Workflow** | `status`, `instructions`, `templates`, `schemas` | Artifact-driven workflow support |
+| **Schemas** | `schema init`, `schema fork`, `schema validate`, `schema which` | Create and manage custom workflows |
+| **Config** | `config` | View and modify settings |
+| **Utility** | `feedback`, `completion` | Feedback and shell integration |
 
 ---
 
-## 人類命令與代理命令
+## Human vs Agent Commands
 
-大多數 CLI 指令是為終端機中的**人類使用**而設計的。某些命令也透過 JSON 輸出支援**代理/腳本使用**。
+Most CLI commands are designed for **human use** in a terminal. Some commands also support **agent/script use** via JSON output.
 
-### 僅限人類的命令
+### Human-Only Commands
 
-這些命令是互動式的，專為終端使用而設計：
+These commands are interactive and designed for terminal use:
 
-| 命令 | 目的 |
+| Command | Purpose |
 |---------|---------|
-| `openspec init` | 初始化項目（互動式提示） |
-| `openspec view` | 互動式儀表板 |
-| `openspec config edit` | 在編輯器中開啟設定 |
-| `openspec feedback` | 透過GitHub提交回饋 |
-| `openspec completion install` | 安裝 shell 補全 |
+| `openspec init` | Initialize project (interactive prompts) |
+| `openspec view` | Interactive dashboard |
+| `openspec config edit` | Open config in editor |
+| `openspec feedback` | Submit feedback via GitHub |
+| `openspec completion install` | Install shell completions |
 
-### 代理兼容指令
+### Agent-Compatible Commands
 
-這些命令支援 `--json` 供 AI 代理程式和腳本程式設計使用的輸出：
+These commands support `--json` output for programmatic use by AI agents and scripts:
 
-| 命令 | 人類使用 | 代理使用 |
+| Command | Human Use | Agent Use |
 |---------|-----------|-----------|
-| `openspec list` | 瀏覽變更/規格 | `--json` 對於結構化資料 |
-| `openspec show <item>` | 閱讀內容 | `--json` 用於解析 |
-| `openspec validate` | 檢查問題 | `--all --json` 用於批量驗證 |
-| `openspec status` | 檢視工件進度 | `--json` 對於結構化狀態 |
-| `openspec instructions` | 取得後續步驟 | `--json` 取得代理指示 |
-| `openspec templates` | 尋找模板路徑 | `--json` 用於路徑解析 |
-| `openspec schemas` | 列出可用模式 | `--json` 用於模式發現 |
+| `openspec list` | Browse changes/specs | `--json` for structured data |
+| `openspec show <item>` | Read content | `--json` for parsing |
+| `openspec validate` | Check for issues | `--all --json` for bulk validation |
+| `openspec status` | See artifact progress | `--json` for structured status |
+| `openspec instructions` | Get next steps | `--json` for agent instructions |
+| `openspec templates` | Find template paths | `--json` for path resolution |
+| `openspec schemas` | List available schemas | `--json` for schema discovery |
 
 ---
 
-## 全域選項
+## Global Options
 
-這些選項適用於所有命令：
+These options work with all commands:
 
-| 選項 | 描述 |
+| Option | Description |
 |--------|-------------|
-| `--version`, `-V` | 顯示版本號 |
-| `--no-color` | 禁用顏色輸出 |
-| `--help`, `-h` | 顯示命令的幫助 |
+| `--version`, `-V` | Show version number |
+| `--no-color` | Disable color output |
+| `--help`, `-h` | Display help for command |
 
 ---
 
-## 設定命令
+## Setup Commands
 
 ### `openspec init`
 
-在您的项目中初始化OpenSpec。建立資料夾結構並設定 AI 工具整合。
+Initialize OpenSpec in your project. Creates the folder structure and configures AI tool integrations.
 
-預設行為使用全域設定預設值：profile `core`， 送貨 `both`, 工作流程 `propose, explore, apply, archive`.
+Default behavior uses global config defaults: profile `core`, delivery `both`, workflows `propose, explore, apply, archive`.
 
 ```
 openspec init [path] [options]
 ```
 
-**參數：**
+**Arguments:**
 
-| 爭論 | 必需的 | 描述 |
+| Argument | Required | Description |
 |----------|----------|-------------|
-| `path` | 不 | 目標目錄（預設：目前目錄） |
+| `path` | No | Target directory (default: current directory) |
 
-**選項：**
+**Options:**
 
-| 選項 | 描述 |
+| Option | Description |
 |--------|-------------|
-| `--tools <list>` | 以非互動方式設定 AI 工具。使用 `all`, `none`, 或逗號分隔的列表 |
-| `--force` | 自動清理遺留文件而不提示 |
-| `--profile <profile>` | 覆蓋此 init 執行的全域設定檔 (`core` 或者 `custom`) |
+| `--tools <list>` | Configure AI tools non-interactively. Use `all`, `none`, or comma-separated list |
+| `--force` | Auto-cleanup legacy files without prompting |
+| `--profile <profile>` | Override global profile for this init run (`core` or `custom`) |
 
-`--profile custom` 使用目前在全域設定中選擇的任何工作流程（`openspec config profile`).
+`--profile custom` uses whatever workflows are currently selected in global config (`openspec config profile`).
 
-**支援的工具 ID（`--tools`):** `amazon-q`, `antigravity`, `auggie`, `claude`, `cline`, `codex`, `codebuddy`, `continue`, `costrict`, `crush`, `cursor`, `factory`, `gemini`, `github-copilot`, `iflow`, `kilocode`, `kiro`, `opencode`, `pi`, `qoder`, `qwen`, `roocode`, `trae`, `windsurf`
+**Supported tool IDs (`--tools`):** `amazon-q`, `antigravity`, `auggie`, `claude`, `cline`, `codex`, `codebuddy`, `continue`, `costrict`, `crush`, `cursor`, `factory`, `gemini`, `github-copilot`, `iflow`, `kilocode`, `kiro`, `opencode`, `pi`, `qoder`, `qwen`, `roocode`, `trae`, `windsurf`
 
-**範例：**
+**Examples:**
 
 ```bash
 # Interactive initialization
@@ -113,7 +113,7 @@ openspec init --profile core
 openspec init --force
 ```
 
-**它創造了什麼：**
+**What it creates:**
 
 ```
 openspec/
@@ -131,25 +131,25 @@ openspec/
 
 ### `openspec update`
 
-升級CLI後更新OpenSpec指令檔。使用您目前的全域設定檔、選定的工作流程和交付模式重新產生 AI 工具設定檔。
+Update OpenSpec instruction files after upgrading the CLI. Re-generates AI tool configuration files using your current global profile, selected workflows, and delivery mode.
 
 ```
 openspec update [path] [options]
 ```
 
-**參數：**
+**Arguments:**
 
-| 爭論 | 必需的 | 描述 |
+| Argument | Required | Description |
 |----------|----------|-------------|
-| `path` | 不 | 目標目錄（預設：目前目錄） |
+| `path` | No | Target directory (default: current directory) |
 
-**選項：**
+**Options:**
 
-| 選項 | 描述 |
+| Option | Description |
 |--------|-------------|
-| `--force` | 即使文件是最新的也強制更新 |
+| `--force` | Force update even when files are up to date |
 
-**範例：**
+**Example:**
 
 ```bash
 # Update instruction files after npm upgrade
@@ -159,26 +159,26 @@ openspec update
 
 ---
 
-## 瀏覽命令
+## Browsing Commands
 
 ### `openspec list`
 
-列出項目中的變更或規格。
+List changes or specs in your project.
 
 ```
 openspec list [options]
 ```
 
-**選項：**
+**Options:**
 
-| 選項 | 描述 |
+| Option | Description |
 |--------|-------------|
-| `--specs` | 列出規格而不是更改 |
-| `--changes` | 清單更改（預設） |
-| `--sort <order>` | 排序方式 `recent` （預設）或 `name` |
-| `--json` | 輸出為JSON |
+| `--specs` | List specs instead of changes |
+| `--changes` | List changes (default) |
+| `--sort <order>` | Sort by `recent` (default) or `name` |
+| `--json` | Output as JSON |
 
-**範例：**
+**Examples:**
 
 ```bash
 # List all active changes
@@ -191,7 +191,7 @@ openspec list --specs
 openspec list --json
 ```
 
-**輸出（文字）：**
+**Output (text):**
 
 ```
 Active changes:
@@ -203,53 +203,53 @@ Active changes:
 
 ### `openspec view`
 
-顯示互動式儀表板以探索規格和變更。
+Display an interactive dashboard for exploring specs and changes.
 
 ```
 openspec view
 ```
 
-打開基於終端的介面，用於導航項目的規格和變更。
+Opens a terminal-based interface for navigating your project's specifications and changes.
 
 ---
 
 ### `openspec show`
 
-顯示變更或規格的詳細資訊。
+Display details of a change or spec.
 
 ```
 openspec show [item-name] [options]
 ```
 
-**參數：**
+**Arguments:**
 
-| 爭論 | 必需的 | 描述 |
+| Argument | Required | Description |
 |----------|----------|-------------|
-| `item-name` | 不 | 變更名稱或規格（如果省略則提示） |
+| `item-name` | No | Name of change or spec (prompts if omitted) |
 
-**選項：**
+**Options:**
 
-| 選項 | 描述 |
+| Option | Description |
 |--------|-------------|
-| `--type <type>` | 指定類型： `change` 或者 `spec` （如果明確則自動檢測） |
-| `--json` | 輸出為JSON |
-| `--no-interactive` | 禁用提示 |
+| `--type <type>` | Specify type: `change` or `spec` (auto-detected if unambiguous) |
+| `--json` | Output as JSON |
+| `--no-interactive` | Disable prompts |
 
-**更改特定選項：**
+**Change-specific options:**
 
-| 選項 | 描述 |
+| Option | Description |
 |--------|-------------|
-| `--deltas-only` | 僅顯示增量規格（JSON 模式） |
+| `--deltas-only` | Show only delta specs (JSON mode) |
 
-**特定規格選項：**
+**Spec-specific options:**
 
-| 選項 | 描述 |
+| Option | Description |
 |--------|-------------|
-| `--requirements` | 僅顯示需求，排除場景（JSON模式） |
-| `--no-scenarios` | 排除場景內容（JSON模式） |
-| `-r, --requirement <id>` | 以從 1 開始的索引顯示具體要求（JSON 模式） |
+| `--requirements` | Show only requirements, exclude scenarios (JSON mode) |
+| `--no-scenarios` | Exclude scenario content (JSON mode) |
+| `-r, --requirement <id>` | Show specific requirement by 1-based index (JSON mode) |
 
-**範例：**
+**Examples:**
 
 ```bash
 # Interactive selection
@@ -267,36 +267,36 @@ openspec show add-dark-mode --json
 
 ---
 
-## 驗證命令
+## Validation Commands
 
 ### `openspec validate`
 
-驗證結構問題的變更和規格。
+Validate changes and specs for structural issues.
 
 ```
 openspec validate [item-name] [options]
 ```
 
-**參數：**
+**Arguments:**
 
-| 爭論 | 必需的 | 描述 |
+| Argument | Required | Description |
 |----------|----------|-------------|
-| `item-name` | 不 | 要驗證的特定項目（如果省略則提示） |
+| `item-name` | No | Specific item to validate (prompts if omitted) |
 
-**選項：**
+**Options:**
 
-| 選項 | 描述 |
+| Option | Description |
 |--------|-------------|
-| `--all` | 驗證所有變更和規格 |
-| `--changes` | 驗證所有更改 |
-| `--specs` | 驗證所有規格 |
-| `--type <type>` | 當名稱不明確時指定類型： `change` 或者 `spec` |
-| `--strict` | 啟用嚴格驗證模式 |
-| `--json` | 輸出為JSON |
-| `--concurrency <n>` | 最大並行驗證數（預設值：6，或 `OPENSPEC_CONCURRENCY` 環境） |
-| `--no-interactive` | 禁用提示 |
+| `--all` | Validate all changes and specs |
+| `--changes` | Validate all changes |
+| `--specs` | Validate all specs |
+| `--type <type>` | Specify type when name is ambiguous: `change` or `spec` |
+| `--strict` | Enable strict validation mode |
+| `--json` | Output as JSON |
+| `--concurrency <n>` | Max parallel validations (default: 6, or `OPENSPEC_CONCURRENCY` env) |
+| `--no-interactive` | Disable prompts |
 
-**範例：**
+**Examples:**
 
 ```bash
 # Interactive validation
@@ -315,7 +315,7 @@ openspec validate --all --json
 openspec validate --all --strict --concurrency 12
 ```
 
-**輸出（文字）：**
+**Output (text):**
 
 ```
 Validating add-dark-mode...
@@ -326,7 +326,7 @@ Validating add-dark-mode...
 1 warning found
 ```
 
-**輸出（JSON）：**
+**Output (JSON):**
 
 ```json
 {
@@ -350,31 +350,31 @@ Validating add-dark-mode...
 
 ---
 
-## 生命週期命令
+## Lifecycle Commands
 
 ### `openspec archive`
 
-歸檔已完成的變更並將增量規格合併到主要規格中。
+Archive a completed change and merge delta specs into main specs.
 
 ```
 openspec archive [change-name] [options]
 ```
 
-**參數：**
+**Arguments:**
 
-| 爭論 | 必需的 | 描述 |
+| Argument | Required | Description |
 |----------|----------|-------------|
-| `change-name` | 不 | 變更為存檔（如果省略則提示） |
+| `change-name` | No | Change to archive (prompts if omitted) |
 
-**選項：**
+**Options:**
 
-| 選項 | 描述 |
+| Option | Description |
 |--------|-------------|
-| `-y, --yes` | 跳過確認提示 |
-| `--skip-specs` | 跳過規格更新（針對基礎設施/工具/僅文件變更） |
-| `--no-validate` | 跳過驗證（需要確認） |
+| `-y, --yes` | Skip confirmation prompts |
+| `--skip-specs` | Skip spec updates (for infrastructure/tooling/doc-only changes) |
+| `--no-validate` | Skip validation (requires confirmation) |
 
-**範例：**
+**Examples:**
 
 ```bash
 # Interactive archive
@@ -390,36 +390,36 @@ openspec archive add-dark-mode --yes
 openspec archive update-ci-config --skip-specs
 ```
 
-**它的作用：**
+**What it does:**
 
-1. 驗證更改（除非 `--no-validate`)
-2. 提示確認（除非 `--yes`)
-3. 將 delta 規格合併到 `openspec/specs/`
-4. 將更改資料夾移至 `openspec/changes/archive/YYYY-MM-DD-<name>/`
+1. Validates the change (unless `--no-validate`)
+2. Prompts for confirmation (unless `--yes`)
+3. Merges delta specs into `openspec/specs/`
+4. Moves change folder to `openspec/changes/archive/YYYY-MM-DD-<name>/`
 
 ---
 
-## 工作流程指令
+## Workflow Commands
 
-這些命令支援工件驅動的 OPSX 工作流程。它們對於人類檢查進度和代理確定後續步驟都很有用。
+These commands support the artifact-driven OPSX workflow. They're useful for both humans checking progress and agents determining next steps.
 
 ### `openspec status`
 
-顯示變更的工件完成狀態。
+Display artifact completion status for a change.
 
 ```
 openspec status [options]
 ```
 
-**選項：**
+**Options:**
 
-| 選項 | 描述 |
+| Option | Description |
 |--------|-------------|
-| `--change <id>` | 更改名稱（如果省略則提示） |
-| `--schema <name>` | 架構覆蓋（從更改的設定自動偵測） |
-| `--json` | 輸出為JSON |
+| `--change <id>` | Change name (prompts if omitted) |
+| `--schema <name>` | Schema override (auto-detected from change's config) |
+| `--json` | Output as JSON |
 
-**範例：**
+**Examples:**
 
 ```bash
 # Interactive status check
@@ -432,7 +432,7 @@ openspec status --change add-dark-mode
 openspec status --change add-dark-mode --json
 ```
 
-**輸出（文字）：**
+**Output (text):**
 
 ```
 Change: add-dark-mode
@@ -445,7 +445,7 @@ Progress: 2/4 artifacts complete
 [-] tasks (blocked by: design)
 ```
 
-**輸出（JSON）：**
+**Output (JSON):**
 
 ```json
 {
@@ -466,29 +466,29 @@ Progress: 2/4 artifacts complete
 
 ### `openspec instructions`
 
-取得有關建立工件或應用任務的豐富說明。人工智慧代理使用它來瞭解下一步要建立什麼。
+Get enriched instructions for creating an artifact or applying tasks. Used by AI agents to understand what to create next.
 
 ```
 openspec instructions [artifact] [options]
 ```
 
-**參數：**
+**Arguments:**
 
-| 爭論 | 必需的 | 描述 |
+| Argument | Required | Description |
 |----------|----------|-------------|
-| `artifact` | 不 | 工件 ID： `proposal`, `specs`, `design`, `tasks`， 或者 `apply` |
+| `artifact` | No | Artifact ID: `proposal`, `specs`, `design`, `tasks`, or `apply` |
 
-**選項：**
+**Options:**
 
-| 選項 | 描述 |
+| Option | Description |
 |--------|-------------|
-| `--change <id>` | 更改名稱（非互動模式下需要） |
-| `--schema <name>` | 架構覆蓋 |
-| `--json` | 輸出為JSON |
+| `--change <id>` | Change name (required in non-interactive mode) |
+| `--schema <name>` | Schema override |
+| `--json` | Output as JSON |
 
-**特殊情況：**使用 `apply` 作為獲取任務執行指令的神器。
+**Special case:** Use `apply` as the artifact to get task implementation instructions.
 
-**範例：**
+**Examples:**
 
 ```bash
 # Get instructions for next artifact
@@ -504,31 +504,31 @@ openspec instructions apply --change add-dark-mode
 openspec instructions design --change add-dark-mode --json
 ```
 
-**輸出包括：**
+**Output includes:**
 
-- 工件的模板內容
-- 來自設定的項目上下文
-- 來自依賴項的內容
-- 設定中的每個工件規則
+- Template content for the artifact
+- Project context from config
+- Content from dependency artifacts
+- Per-artifact rules from config
 
 ---
 
 ### `openspec templates`
 
-顯示架構中所有工件的已解析範本路徑。
+Show resolved template paths for all artifacts in a schema.
 
 ```
 openspec templates [options]
 ```
 
-**選項：**
+**Options:**
 
-| 選項 | 描述 |
+| Option | Description |
 |--------|-------------|
-| `--schema <name>` | 要檢查的架構（預設： `spec-driven`) |
-| `--json` | 輸出為JSON |
+| `--schema <name>` | Schema to inspect (default: `spec-driven`) |
+| `--json` | Output as JSON |
 
-**範例：**
+**Examples:**
 
 ```bash
 # Show template paths for default schema
@@ -541,7 +541,7 @@ openspec templates --schema my-workflow
 openspec templates --json
 ```
 
-**輸出（文字）：**
+**Output (text):**
 
 ```
 Schema: spec-driven
@@ -557,25 +557,25 @@ Templates:
 
 ### `openspec schemas`
 
-列出可用的工作流程模式及其描述和工件流程。
+List available workflow schemas with their descriptions and artifact flows.
 
 ```
 openspec schemas [options]
 ```
 
-**選項：**
+**Options:**
 
-| 選項 | 描述 |
+| Option | Description |
 |--------|-------------|
-| `--json` | 輸出為JSON |
+| `--json` | Output as JSON |
 
-**範例：**
+**Example:**
 
 ```bash
 openspec schemas
 ```
 
-**輸出：**
+**Output:**
 
 ```
 Available schemas:
@@ -591,36 +591,36 @@ Available schemas:
 
 ---
 
-## 架構命令
+## Schema Commands
 
-用於建立和管理自訂工作流程架構的命令。
+Commands for creating and managing custom workflow schemas.
 
 ### `openspec schema init`
 
-建立一個新的專案本地架構。
+Create a new project-local schema.
 
 ```
 openspec schema init <name> [options]
 ```
 
-**參數：**
+**Arguments:**
 
-| 爭論 | 必需的 | 描述 |
+| Argument | Required | Description |
 |----------|----------|-------------|
-| `name` | 是的 | 架構名稱（kebab-case） |
+| `name` | Yes | Schema name (kebab-case) |
 
-**選項：**
+**Options:**
 
-| 選項 | 描述 |
+| Option | Description |
 |--------|-------------|
-| `--description <text>` | 架構描述 |
-| `--artifacts <list>` | 以逗號分隔的工件 ID（預設值： `proposal,specs,design,tasks`) |
-| `--default` | 設定為專案預設架構 |
+| `--description <text>` | Schema description |
+| `--artifacts <list>` | Comma-separated artifact IDs (default: `proposal,specs,design,tasks`) |
+| `--default` | Set as project default schema |
 | `--no-default` | Don't prompt to set as default |
-| `--force` | 覆蓋現有架構 |
-| `--json` | 輸出為JSON |
+| `--force` | Overwrite existing schema |
+| `--json` | Output as JSON |
 
-**範例：**
+**Examples:**
 
 ```bash
 # Interactive schema creation
@@ -633,7 +633,7 @@ openspec schema init rapid \
   --default
 ```
 
-**它創造了什麼：**
+**What it creates:**
 
 ```
 openspec/schemas/<name>/
@@ -649,27 +649,27 @@ openspec/schemas/<name>/
 
 ### `openspec schema fork`
 
-將現有架構複製到您的專案中以進行自訂。
+Copy an existing schema to your project for customization.
 
 ```
 openspec schema fork <source> [name] [options]
 ```
 
-**參數：**
+**Arguments:**
 
-| 爭論 | 必需的 | 描述 |
+| Argument | Required | Description |
 |----------|----------|-------------|
-| `source` | 是的 | 要複製的架構 |
-| `name` | 不 | 新架構名稱（預設： `<source>-custom`) |
+| `source` | Yes | Schema to copy |
+| `name` | No | New schema name (default: `<source>-custom`) |
 
-**選項：**
+**Options:**
 
-| 選項 | 描述 |
+| Option | Description |
 |--------|-------------|
-| `--force` | 涵蓋現有目的地 |
-| `--json` | 輸出為JSON |
+| `--force` | Overwrite existing destination |
+| `--json` | Output as JSON |
 
-**範例：**
+**Example:**
 
 ```bash
 # Fork the built-in spec-driven schema
@@ -680,26 +680,26 @@ openspec schema fork spec-driven my-workflow
 
 ### `openspec schema validate`
 
-驗證架構的結構和模板。
+Validate a schema's structure and templates.
 
 ```
 openspec schema validate [name] [options]
 ```
 
-**參數：**
+**Arguments:**
 
-| 爭論 | 必需的 | 描述 |
+| Argument | Required | Description |
 |----------|----------|-------------|
-| `name` | 不 | Schema to validate (validates all if omitted) |
+| `name` | No | Schema to validate (validates all if omitted) |
 
-**選項：**
+**Options:**
 
-| 選項 | 描述 |
+| Option | Description |
 |--------|-------------|
-| `--verbose` | 顯示詳細的驗證步驟 |
-| `--json` | 輸出為JSON |
+| `--verbose` | Show detailed validation steps |
+| `--json` | Output as JSON |
 
-**範例：**
+**Example:**
 
 ```bash
 # Validate a specific schema
@@ -713,71 +713,71 @@ openspec schema validate
 
 ### `openspec schema which`
 
-顯示架構從何處解析（對於偵錯優先權很有用）。
+Show where a schema resolves from (useful for debugging precedence).
 
 ```
 openspec schema which [name] [options]
 ```
 
-**參數：**
+**Arguments:**
 
-| 爭論 | 必需的 | 描述 |
+| Argument | Required | Description |
 |----------|----------|-------------|
-| `name` | 不 | 模式名稱 |
+| `name` | No | Schema name |
 
-**選項：**
+**Options:**
 
-| 選項 | 描述 |
+| Option | Description |
 |--------|-------------|
-| `--all` | 列出所有模式及其來源 |
-| `--json` | 輸出為JSON |
+| `--all` | List all schemas with their sources |
+| `--json` | Output as JSON |
 
-**範例：**
+**Example:**
 
 ```bash
 # Check where a schema comes from
 openspec schema which spec-driven
 ```
 
-**輸出：**
+**Output:**
 
 ```
 spec-driven resolves from: package
   Source: /usr/local/lib/node_modules/@fission-ai/openspec/schemas/spec-driven
 ```
 
-**架構優先權：**
+**Schema precedence:**
 
-1. 專案: `openspec/schemas/<name>/`
-2. 用戶： `~/.local/share/openspec/schemas/<name>/`
-3. 包：內建模式
+1. Project: `openspec/schemas/<name>/`
+2. User: `~/.local/share/openspec/schemas/<name>/`
+3. Package: Built-in schemas
 
 ---
 
-## 設定命令
+## Configuration Commands
 
 ### `openspec config`
 
-檢視和修改全域OpenSpec設定。
+View and modify global OpenSpec configuration.
 
 ```
 openspec config <subcommand> [options]
 ```
 
-**子命令：**
+**Subcommands:**
 
-| 子命令 | 描述 |
+| Subcommand | Description |
 |------------|-------------|
-| `path` | 顯示設定檔位置 |
-| `list` | 顯示所有目前設定 |
-| `get <key>` | 取得特定值 |
-| `set <key> <value>` | 設定一個值 |
-| `unset <key>` | 移除一把鑰匙 |
-| `reset` | 重設為預設值 |
-| `edit` | 打開於 `$EDITOR` |
-| `profile [preset]` | 以互動方式或透過預設設定工作流程設定檔 |
+| `path` | Show config file location |
+| `list` | Show all current settings |
+| `get <key>` | Get a specific value |
+| `set <key> <value>` | Set a value |
+| `unset <key>` | Remove a key |
+| `reset` | Reset to defaults |
+| `edit` | Open in `$EDITOR` |
+| `profile [preset]` | Configure workflow profile interactively or via preset |
 
-**範例：**
+**Examples:**
 
 ```bash
 # Show config file path
@@ -811,18 +811,18 @@ openspec config profile
 openspec config profile core
 ```
 
-`openspec config profile` 從目前狀態摘要開始，然後讓您選擇：
-- 改變交付+工作流程
-- 僅更改交付
-- 僅更改工作流程
-- 保留目前設定（退出）
+`openspec config profile` starts with a current-state summary, then lets you choose:
+- Change delivery + workflows
+- Change delivery only
+- Change workflows only
+- Keep current settings (exit)
 
-如果保留目前設置，則不會寫入任何更改，也不會顯示更新提示。
-如果沒有設定更改，但當前專案檔案與您的全域設定檔/交付不同步，OpenSpec 將顯示警告並建議執行 `openspec update`.
-緊迫 `Ctrl+C` 也乾淨地取消流程（無堆疊追蹤）並使用程式碼退出 `130`.
-在工作流程清單中， `[x]` 表示在全域設定中選擇工作流程。若要將這些選擇套用到專案文件，請執行 `openspec update` （或選擇 `Apply changes to this project now?` 當項目內出現提示時）。
+If you keep current settings, no changes are written and no update prompt is shown.
+If there are no config changes but the current project files are out of sync with your global profile/delivery, OpenSpec will show a warning and suggest running `openspec update`.
+Pressing `Ctrl+C` also cancels the flow cleanly (no stack trace) and exits with code `130`.
+In the workflow checklist, `[x]` means the workflow is selected in global config. To apply those selections to project files, run `openspec update` (or choose `Apply changes to this project now?` when prompted inside a project).
 
-**互動範例：**
+**Interactive examples:**
 
 ```bash
 # Delivery-only update
@@ -838,31 +838,31 @@ openspec config profile
 
 ---
 
-## 實用命令
+## Utility Commands
 
 ### `openspec feedback`
 
-提交關於OpenSpec的回饋。建立 GitHub 問題。
+Submit feedback about OpenSpec. Creates a GitHub issue.
 
 ```
 openspec feedback <message> [options]
 ```
 
-**參數：**
+**Arguments:**
 
-| 爭論 | 必需的 | 描述 |
+| Argument | Required | Description |
 |----------|----------|-------------|
-| `message` | 是的 | 回饋留言 |
+| `message` | Yes | Feedback message |
 
-**選項：**
+**Options:**
 
-| 選項 | 描述 |
+| Option | Description |
 |--------|-------------|
-| `--body <text>` | 詳細說明 |
+| `--body <text>` | Detailed description |
 
-**要求：** GitHub CLI (`gh`) 必須安裝並經過身份驗證。
+**Requirements:** GitHub CLI (`gh`) must be installed and authenticated.
 
-**範例：**
+**Example:**
 
 ```bash
 openspec feedback "Add support for custom artifact types" \
@@ -873,23 +873,23 @@ openspec feedback "Add support for custom artifact types" \
 
 ### `openspec completion`
 
-管理 OpenSpec CLI 的 shell 完成情況。
+Manage shell completions for the OpenSpec CLI.
 
 ```
 openspec completion <subcommand> [shell]
 ```
 
-**子命令：**
+**Subcommands:**
 
-| 子命令 | 描述 |
+| Subcommand | Description |
 |------------|-------------|
-| `generate [shell]` | 將完成腳本輸出到 stdout |
-| `install [shell]` | 為您的 shell 安裝完成 |
-| `uninstall [shell]` | 刪除已安裝的完成項 |
+| `generate [shell]` | Output completion script to stdout |
+| `install [shell]` | Install completion for your shell |
+| `uninstall [shell]` | Remove installed completions |
 
-**支援的外殼：** `bash`, `zsh`, `fish`, `powershell`
+**Supported shells:** `bash`, `zsh`, `fish`, `powershell`
 
-**範例：**
+**Examples:**
 
 ```bash
 # Install completions (auto-detects shell)
@@ -907,28 +907,28 @@ openspec completion uninstall
 
 ---
 
-## 退出代碼
+## Exit Codes
 
-| 程式碼 | 意義 |
+| Code | Meaning |
 |------|---------|
-| `0` | 成功 |
-| `1` | 錯誤（驗證失敗、檔案遺失等） |
+| `0` | Success |
+| `1` | Error (validation failure, missing files, etc.) |
 
 ---
 
-## 環境變數
+## Environment Variables
 
-| 多變的 | 描述 |
+| Variable | Description |
 |----------|-------------|
-| `OPENSPEC_CONCURRENCY` | 批次驗證的預設並發數（預設值：6） |
-| `EDITOR` 或者 `VISUAL` | 編輯為 `openspec config edit` |
-| `NO_COLOR` | 設定後禁用顏色輸出 |
+| `OPENSPEC_CONCURRENCY` | Default concurrency for bulk validation (default: 6) |
+| `EDITOR` or `VISUAL` | Editor for `openspec config edit` |
+| `NO_COLOR` | Disable color output when set |
 
 ---
 
-## 相關文件
+## Related Documentation
 
-- [命令](commands.md) - AI斜線指令（`/opsx:propose`, `/opsx:apply`， ETC。 ）
-- [工作流程](workflows.md) - 常見模式以及何時使用每個命令
-- [客製化](customization.md) - 建立自訂架構和模板
-- [入門](getting-started.md) - 首次設定指南
+- [Commands](commands.md) - AI slash commands (`/opsx:propose`, `/opsx:apply`, etc.)
+- [Workflows](workflows.md) - Common patterns and when to use each command
+- [Customization](customization.md) - Create custom schemas and templates
+- [Getting Started](getting-started.md) - First-time setup guide

@@ -1,23 +1,23 @@
-# CLI 更改指令規範
+# CLI Change Command Spec
 
-## 新增要求
+## ADDED Requirements
 
-### 需求：互動節目選擇
+### Requirement: Interactive show selection
 
-當未提供變更名稱時，change show 指令應支援互動式選擇。
+The change show command SHALL support interactive selection when no change name is provided.
 
-#### 場景：互動改變節目選擇
+#### Scenario: Interactive change selection for show
 
-- **何時**執行 `openspec change show` 沒有參數
-- **然後** 顯示可用變更的互動式列表
-- **並且**允許使用者選擇要顯示的更改
-- **AND** 顯示所選的變更內容
-- **並且** 維護所有現有的顯示選項（--json、--deltas-only）
+- **WHEN** executing `openspec change show` without arguments
+- **THEN** display an interactive list of available changes
+- **AND** allow the user to select a change to show
+- **AND** display the selected change content
+- **AND** maintain all existing show options (--json, --deltas-only)
 
-#### 場景：非互動式回退保持當前行為
+#### Scenario: Non-interactive fallback keeps current behavior
 
-- **給定** stdin 不是 TTY 或 `--no-interactive` 提供或環境變數 `OPEN_SPEC_INTERACTIVE=0`
-- **何時**執行 `openspec change show` 不改名
-- **THEN** 不交互提示
-- **並** 列印現有提示，包括可用的更改 ID
-- **和**設定 `process.exitCode = 1`
+- **GIVEN** stdin is not a TTY or `--no-interactive` is provided or environment variable `OPEN_SPEC_INTERACTIVE=0`
+- **WHEN** executing `openspec change show` without a change name
+- **THEN** do not prompt interactively
+- **AND** print the existing hint including available change IDs
+- **AND** set `process.exitCode = 1`

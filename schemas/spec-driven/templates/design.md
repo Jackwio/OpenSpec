@@ -1,19 +1,19 @@
-## 情境
+## Context
 
 <!-- Background and current state -->
 
-## 目標/非目標
+## Goals / Non-Goals
 
-**目標：**
+**Goals:**
 <!-- What this design aims to achieve -->
 
-**非目標：**
+**Non-Goals:**
 <!-- What is explicitly out of scope -->
 
-## 決定
+## Decisions
 
 <!-- Key design decisions and rationale -->
 
-## 風險/權衡
+## Risks / Trade-offs
 
 <!-- Known risks and trade-offs -->

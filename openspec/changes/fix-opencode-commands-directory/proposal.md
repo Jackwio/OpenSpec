@@ -1,26 +1,26 @@
-## 為什麼
+## Why
 
-OpenCode 適配器使用 `.opencode/command/` （單數）其命令目錄，但 OpenCode 的官方文件指定 `.opencode/commands/` （複數）。程式碼庫中的每個其他適配器也使用複數目錄名稱（`.claude/commands/`, `.cursor/commands/`, `.factory/commands/`， ETC。 ）。這種不一致是在 2025 年 10 月引入的，但沒有記錄理由。修復 [#748](https://github.com/Fission-AI/OpenSpec/issues/748).
+The OpenCode adapter uses `.opencode/command/` (singular) for its commands directory, but OpenCode's official documentation specifies `.opencode/commands/` (plural). Every other adapter in the codebase also uses plural directory names (`.claude/commands/`, `.cursor/commands/`, `.factory/commands/`, etc.). This inconsistency was introduced in Oct 2025 without documented rationale. Fixes [#748](https://github.com/Fission-AI/OpenSpec/issues/748).
 
-## 有什麼變化
+## What Changes
 
-- OpenCode 適配器路徑更改自 `.opencode/command/` 到 `.opencode/commands/`
-- 遺留清理添加 `.opencode/command/` （舊的單一路徑）用於向後相容
-- 更新文件以反映新的複數路徑
+- OpenCode adapter path changes from `.opencode/command/` to `.opencode/commands/`
+- Legacy cleanup adds `.opencode/command/` (old singular path) for backward compatibility
+- Documentation updated to reflect the new plural path
 
-## 能力
+## Capabilities
 
-### 新功能
+### New Capabilities
 
 _None._
 
-### 修改後的功能
+### Modified Capabilities
 
-- `command-generation`：OpenCode 適配器路徑從單數更改 `command/` 改為複數 `commands/` 以符合 OpenCode 的官方目錄約定
+- `command-generation`: OpenCode adapter path changes from singular `command/` to plural `commands/` to match OpenCode's official directory convention
 
-## 影響
+## Impact
 
-- `src/core/command-generation/adapters/opencode.ts` — 適配器路徑
-- `src/core/legacy-cleanup.ts` — 遺留清理模式+新增舊的單一路徑
-- `docs/supported-tools.md` — 文件表
-- `test/core/command-generation/adapters.test.ts` — 測試斷言
+- `src/core/command-generation/adapters/opencode.ts` — adapter path
+- `src/core/legacy-cleanup.ts` — legacy cleanup pattern + add old singular path
+- `docs/supported-tools.md` — documentation table
+- `test/core/command-generation/adapters.test.ts` — test assertion

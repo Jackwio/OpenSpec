@@ -1,213 +1,213 @@
-# cli-config 規範
+# cli-config Specification
 
-## 目的
+## Purpose
 
-提供CLI介面用於檢視和修改全域OpenSpec設定。使用戶能夠管理設置，而無需手動編輯 JSON 文件，並支援腳本和自動化。
+Provide a CLI interface for viewing and modifying global OpenSpec configuration. Enables users to manage settings without manually editing JSON files, with support for scripting and automation.
 
-## 新增要求
+## ADDED Requirements
 
-### 要求：命令結構
+### Requirement: Command Structure
 
-config 指令應為所有設定操作提供子命令。
+The config command SHALL provide subcommands for all configuration operations.
 
-#### 場景：可用子命令
+#### Scenario: Available subcommands
 
-- **何時** 使用者執行 `openspec config --help`
-- **THEN** 顯示可用的子命令：
-  - `path` - 顯示設定檔位置
-  - `list` - 顯示所有目前設定
-  - `get <key>` - 取得特定值
-  - `set <key> <value>` - 設定一個值
-  - `unset <key>` - 刪除金鑰（恢復預設）
-  - `reset` - 將設定重設為預設值
-  - `edit` - 在編輯器中開啟設定
+- **WHEN** user executes `openspec config --help`
+- **THEN** display available subcommands:
+  - `path` - Show config file location
+  - `list` - Show all current settings
+  - `get <key>` - Get a specific value
+  - `set <key> <value>` - Set a value
+  - `unset <key>` - Remove a key (revert to default)
+  - `reset` - Reset configuration to defaults
+  - `edit` - Open config in editor
 
-### 需求：設定路徑
+### Requirement: Config Path
 
-config 指令應顯示設定檔位置。
+The config command SHALL display the config file location.
 
-#### 場景：顯示設定路徑
+#### Scenario: Show config path
 
-- **何時** 使用者執行 `openspec config path`
-- **然後** 列印設定檔的絕對路徑
-- **並且** 以代碼 0 退出
+- **WHEN** user executes `openspec config path`
+- **THEN** print the absolute path to the config file
+- **AND** exit with code 0
 
-### 需求：設定列表
+### Requirement: Config List
 
-config 指令應顯示所有目前組態值。
+The config command SHALL display all current configuration values.
 
-#### 場景：以人類可讀的格式列出設定
+#### Scenario: List config in human-readable format
 
-- **何時** 使用者執行 `openspec config list`
-- **然後** 以類似 YAML 的格式顯示所有設定值
-- **AND** 顯示帶有縮排的嵌套對象
+- **WHEN** user executes `openspec config list`
+- **THEN** display all config values in YAML-like format
+- **AND** show nested objects with indentation
 
-#### 場景：將設定列為 JSON
+#### Scenario: List config as JSON
 
-- **何時** 使用者執行 `openspec config list --json`
-- **然後** 將完整設定輸出為有效JSON
-- **AND** 僅輸出 JSON（無附加文字）
+- **WHEN** user executes `openspec config list --json`
+- **THEN** output the complete config as valid JSON
+- **AND** output only JSON (no additional text)
 
-### 需求：設定獲取
+### Requirement: Config Get
 
 The config command SHALL retrieve specific configuration values.
 
-#### 場景：取得頂級密鑰
+#### Scenario: Get top-level key
 
-- **何時** 使用者執行 `openspec config get <key>` 使用有效的頂級金鑰
-- **然後** 僅列印原始值（無標籤或格式）
-- **並且** 以代碼 0 退出
+- **WHEN** user executes `openspec config get <key>` with a valid top-level key
+- **THEN** print the raw value only (no labels or formatting)
+- **AND** exit with code 0
 
-#### 場景：取得有點符號的嵌套鍵
+#### Scenario: Get nested key with dot notation
 
-- **何時** 使用者執行 `openspec config get featureFlags.someFlag`
-- **THEN** 使用點表示法遍歷嵌套結構
-- **並** 列印該路徑處的值
+- **WHEN** user executes `openspec config get featureFlags.someFlag`
+- **THEN** traverse the nested structure using dot notation
+- **AND** print the value at that path
 
-#### 場景：取得不存在的密鑰
+#### Scenario: Get non-existent key
 
-- **何時** 使用者執行 `openspec config get <key>` 使用不存在的密鑰
-- **然後** 不列印任何內容（空輸出）
-- **並且** 使用代碼 1 退出
+- **WHEN** user executes `openspec config get <key>` with a key that does not exist
+- **THEN** print nothing (empty output)
+- **AND** exit with code 1
 
-#### 場景：取得物件值
+#### Scenario: Get object value
 
-- **何時** 使用者執行 `openspec config get <key>` 其中值是一個對象
-- **然後** 將物件列印為 JSON
+- **WHEN** user executes `openspec config get <key>` where the value is an object
+- **THEN** print the object as JSON
 
-### 需求：設定集
+### Requirement: Config Set
 
-config 指令應使用自動類型強制設定組態值。
+The config command SHALL set configuration values with automatic type coercion.
 
-#### 場景：設定字串值
+#### Scenario: Set string value
 
-- **何時** 使用者執行 `openspec config set <key> <value>`
-- **AND** 值與布林值或數字模式不匹配
-- **THEN** 將值儲存為字串
-- **和** 顯示確認訊息
+- **WHEN** user executes `openspec config set <key> <value>`
+- **AND** value does not match boolean or number patterns
+- **THEN** store value as a string
+- **AND** display confirmation message
 
-#### 場景：設定布林值
+#### Scenario: Set boolean value
 
-- **何時** 使用者執行 `openspec config set <key> true` 或者 `openspec config set <key> false`
-- **THEN** 將值儲存為布林值（而不是字串）
-- **和** 顯示確認訊息
+- **WHEN** user executes `openspec config set <key> true` or `openspec config set <key> false`
+- **THEN** store value as boolean (not string)
+- **AND** display confirmation message
 
-#### 場景：設定數值
+#### Scenario: Set numeric value
 
-- **何時** 使用者執行 `openspec config set <key> <value>`
-- **AND** 值是有效數字（整數或浮點數）
-- **THEN** 將值儲存為數字（而不是字串）
+- **WHEN** user executes `openspec config set <key> <value>`
+- **AND** value is a valid number (integer or float)
+- **THEN** store value as number (not string)
 
-#### 場景：使用 --string 標誌強製字串
+#### Scenario: Force string with --string flag
 
-- **何時** 使用者執行 `openspec config set <key> <value> --string`
-- **THEN** 將值儲存為字串，無論內容為何
-- **AND** 這允許將文字“true”或“123”儲存為字串
+- **WHEN** user executes `openspec config set <key> <value> --string`
+- **THEN** store value as string regardless of content
+- **AND** this allows storing literal "true" or "123" as strings
 
-#### 場景：設定嵌套鍵
+#### Scenario: Set nested key
 
-- **何時** 使用者執行 `openspec config set featureFlags.newFlag true`
-- **THEN** 如果中間物件不存在則建立它們
-- **AND** 在巢狀路徑處設定值
+- **WHEN** user executes `openspec config set featureFlags.newFlag true`
+- **THEN** create intermediate objects if they don't exist
+- **AND** set the value at the nested path
 
-### 要求：設定未設定
+### Requirement: Config Unset
 
-config 指令應刪除設定覆蓋。
+The config command SHALL remove configuration overrides.
 
-#### 場景：取消設定現有金鑰
+#### Scenario: Unset existing key
 
-- **何時** 使用者執行 `openspec config unset <key>`
-- **且** 金鑰存在於設定中
-- **然後** 從設定檔中刪除金鑰
-- **並且** 該值恢復為預設值
-- **和** 顯示確認訊息
+- **WHEN** user executes `openspec config unset <key>`
+- **AND** the key exists in the config
+- **THEN** remove the key from the config file
+- **AND** the value reverts to its default
+- **AND** display confirmation message
 
-#### 場景：取消設定不存在的金鑰
+#### Scenario: Unset non-existent key
 
-- **何時** 使用者執行 `openspec config unset <key>`
-- **並且** 設定中不存在該金鑰
-- **THEN** 顯示訊息指示密鑰未設定
-- **並且** 以代碼 0 退出
+- **WHEN** user executes `openspec config unset <key>`
+- **AND** the key does not exist in the config
+- **THEN** display message indicating key was not set
+- **AND** exit with code 0
 
-### 要求：設定重置
+### Requirement: Config Reset
 
-config 指令應將組態重設為預設值。
+The config command SHALL reset configuration to defaults.
 
-#### 場景：全部重置並確認
+#### Scenario: Reset all with confirmation
 
-- **何時** 使用者執行 `openspec config reset --all`
-- **THEN** 在繼續之前提示確認
-- **並且** 如果確認，刪除設定檔或重設為預設值
-- **和** 顯示確認訊息
+- **WHEN** user executes `openspec config reset --all`
+- **THEN** prompt for confirmation before proceeding
+- **AND** if confirmed, delete the config file or reset to defaults
+- **AND** display confirmation message
 
-#### 場景：使用 -y 標誌重設所有內容
+#### Scenario: Reset all with -y flag
 
-- **何時** 使用者執行 `openspec config reset --all -y`
-- **然後** 重置而不提示確認
+- **WHEN** user executes `openspec config reset --all -y`
+- **THEN** reset without prompting for confirmation
 
-#### 場景：在沒有 --all 標誌的情況下重置
+#### Scenario: Reset without --all flag
 
-- **何時** 使用者執行 `openspec config reset` 沒有 `--all`
-- **THEN** 顯示錯誤指示 `--all` 是必須的
-- **並且** 使用代碼 1 退出
+- **WHEN** user executes `openspec config reset` without `--all`
+- **THEN** display error indicating `--all` is required
+- **AND** exit with code 1
 
-### 需求：設定編輯
+### Requirement: Config Edit
 
-設定命令應在使用者編輯器中開啟設定檔。
+The config command SHALL open the config file in the user's editor.
 
-#### 場景：成功開啟編輯器
+#### Scenario: Open editor successfully
 
-- **何時** 使用者執行 `openspec config edit`
-- **和** `$EDITOR` 或者 `$VISUAL` 環境變數已設定
-- **然後** 在該編輯器中開啟設定檔
-- **並且** 如果設定檔不存在，則使用預設值建立它
-- **並且**等待編輯器關閉後再返回
+- **WHEN** user executes `openspec config edit`
+- **AND** `$EDITOR` or `$VISUAL` environment variable is set
+- **THEN** open the config file in that editor
+- **AND** create the config file with defaults if it doesn't exist
+- **AND** wait for the editor to close before returning
 
-#### 場景：未設定編輯器
+#### Scenario: No editor configured
 
-- **何時** 使用者執行 `openspec config edit`
-- **並且**都不是 `$EDITOR` 也不 `$VISUAL` 已設定
-- **THEN** 顯示錯誤訊息建議設定 `$EDITOR`
-- **並且** 使用代碼 1 退出
+- **WHEN** user executes `openspec config edit`
+- **AND** neither `$EDITOR` nor `$VISUAL` is set
+- **THEN** display error message suggesting to set `$EDITOR`
+- **AND** exit with code 1
 
-### 需求：密鑰命名約定
+### Requirement: Key Naming Convention
 
-設定指令應使用與 JSON 結構相符的駝峰命名法鍵。
+The config command SHALL use camelCase keys matching the JSON structure.
 
-#### 場景：鍵匹配 JSON 結構
+#### Scenario: Keys match JSON structure
 
-- **何時**透過 CLI 存取設定金鑰
-- **那麼** 使用駝峰命名法來符合實際的 JSON 屬性名稱
-- **AND** 支援巢狀存取的點表示法（例如， `featureFlags.someFlag`)
+- **WHEN** accessing configuration keys via CLI
+- **THEN** use camelCase matching the actual JSON property names
+- **AND** support dot notation for nested access (e.g., `featureFlags.someFlag`)
 
-### 要求：架構驗證
+### Requirement: Schema Validation
 
 The config command SHALL validate configuration writes against the config schema using zod, while allowing unknown fields for forward compatibility.
 
-#### 場景：接受未知密鑰
+#### Scenario: Unknown key accepted
 
-- **何時** 使用者執行 `openspec config set someFutureKey 123`
-- **THEN** 該值已成功儲存
-- **並且** 以代碼 0 退出
+- **WHEN** user executes `openspec config set someFutureKey 123`
+- **THEN** the value is saved successfully
+- **AND** exit with code 0
 
-#### 場景：無效的功能標誌值被拒絕
+#### Scenario: Invalid feature flag value rejected
 
-- **何時** 使用者執行 `openspec config set featureFlags.someFlag notABoolean`
-- **然後** 顯示描述性錯誤訊息
-- **並且** 不要修改設定檔
-- **並且** 使用代碼 1 退出
+- **WHEN** user executes `openspec config set featureFlags.someFlag notABoolean`
+- **THEN** display a descriptive error message
+- **AND** do not modify the config file
+- **AND** exit with code 1
 
-### 要求：保留範圍標誌
+### Requirement: Reserved Scope Flag
 
-設定命令應保留 `--scope` 未來可擴展性的標誌。
+The config command SHALL reserve the `--scope` flag for future extensibility.
 
-#### 場景：範圍標誌預設為全域
+#### Scenario: Scope flag defaults to global
 
-- **何時** 使用者執行任何設定命令而無需 `--scope`
-- **THEN** 對全域設定進行操作（預設行為）
+- **WHEN** user executes any config command without `--scope`
+- **THEN** operate on global configuration (default behavior)
 
-#### 場景：專案範圍尚未實施
+#### Scenario: Project scope not yet implemented
 
-- **何時** 使用者執行 `openspec config --scope project <subcommand>`
-- **然後** 顯示錯誤訊息：“專案本地設定尚未實現”
-- **並且** 使用代碼 1 退出
+- **WHEN** user executes `openspec config --scope project <subcommand>`
+- **THEN** display error message: "Project-local config is not yet implemented"
+- **AND** exit with code 1

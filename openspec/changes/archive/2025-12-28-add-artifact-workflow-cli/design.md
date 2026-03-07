@@ -1,28 +1,28 @@
-## 情境
+## Context
 
-工件工作流程 POC 的切片 4。核心功能（ArtifactGraph、InstructionLoader、change-utils）已完成。此切片新增 CLI 指令以向使用者公開工件工作流程。
+Slice 4 of the artifact workflow POC. The core functionality (ArtifactGraph, InstructionLoader, change-utils) is complete. This slice adds CLI commands to expose the artifact workflow to users.
 
-**關鍵限制**：這是實驗性的。必須隔離命令，以便在該功能不起作用時輕鬆刪除。
+**Key constraint**: This is experimental. Commands must be isolated for easy removal if the feature doesn't work out.
 
-## 目標/非目標
+## Goals / Non-Goals
 
-- **目標：**
-  - 透過CLI公開工件工作流程狀態與說明
-  - 透過頂級動詞指令提供流暢的使用者體驗
-  - 支援人類可讀和 JSON 輸出
-  - 使代理程式能夠以程式設計方式查詢工作流程狀態
-  - 保持實施隔離以便於刪除
+- **Goals:**
+  - Expose artifact workflow status and instructions via CLI
+  - Provide fluid UX with top-level verb commands
+  - Support both human-readable and JSON output
+  - Enable agents to programmatically query workflow state
+  - Keep implementation isolated for easy removal
 
-- **非目標：**
-  - 互動式工件建立精靈（未來的工作）
-  - 架構管理命令（延遲）
-  - 自動偵測主動變化（CLI 是確定性的，代理推斷）
+- **Non-Goals:**
+  - Interactive artifact creation wizards (future work)
+  - Schema management commands (deferred)
+  - Auto-detection of active change (CLI is deterministic, agents infer)
 
-## 決定
+## Decisions
 
-### 命令結構：頂級動詞
+### Command Structure: Top-Level Verbs
 
-命令是頂級的，以實現最大的流動性：
+Commands are top-level for maximum fluidity:
 
 ```
 openspec status --change <id>
@@ -32,81 +32,81 @@ openspec templates [--schema <name>]
 openspec new change <name>
 ```
 
-**理由：**
-- 最流暢的使用者體驗 - 最少的擊鍵次數
-- 命令夠獨特以避免衝突
-- 使用者簡單的心智模型
+**Rationale:**
+- Most fluid UX - fewest keystrokes
+- Commands are unique enough to avoid conflicts
+- Simple mental model for users
 
-**接受權衡：** 輕微的命名空間污染，但命令是不同的並且可以乾淨地刪除。
+**Trade-off accepted:** Slight namespace pollution, but commands are distinct and can be removed cleanly.
 
-### 實驗分離
+### Experimental Isolation
 
-所有工件工作流程指令都在單一檔案中實作：
+All artifact workflow commands are implemented in a single file:
 
 ```
 src/commands/artifact-workflow.ts
 ```
 
-**要刪除功能：**
-1. 刪除 `src/commands/artifact-workflow.ts`
-2. 從中刪除 ~5 行 `src/cli/index.ts`
+**To remove the feature:**
+1. Delete `src/commands/artifact-workflow.ts`
+2. Remove ~5 lines from `src/cli/index.ts`
 
-沒有觸及其他文件，不會對穩定功能造成風險。
+No other files touched, no risk to stable functionality.
 
-### 確定性 CLI 顯式 `--change`
+### Deterministic CLI with Explicit `--change`
 
-所有特定於更改的命令都需要 `--change <id>`:
+All change-specific commands require `--change <id>`:
 
 ```bash
 openspec status --change add-auth   # explicit, works
 openspec status                      # error: missing --change
 ```
 
-**理由：**
-- CLI是純粹的，可測試的，沒有隱藏狀態
-- 代理從對話中推斷變化並明確傳遞
-- 沒有設定檔追蹤“主動更改”
+**Rationale:**
+- CLI is pure, testable, no hidden state
+- Agents infer change from conversation and pass explicitly
+- No config file tracking "active change"
 - Consistent with POC design philosophy
 
 ### New Change Command Structure
 
-建立變更使用顯式子命令：
+Creating changes uses explicit subcommand:
 
 ```bash
 openspec new change add-feature
 ```
 
-**理由：**
-- `openspec new <name>` 不明確（新什麼？）
-- `openspec new change <name>` 清晰且可擴展
-- 可以添加 `openspec new spec <name>` 稍後如果需要的話
+**Rationale:**
+- `openspec new <name>` is ambiguous (new what?)
+- `openspec new change <name>` is clear and extensible
+- Can add `openspec new spec <name>` later if needed
 
-### 輸出格式
+### Output Formats
 
-- **預設**：帶有視覺指示器的人類可讀文本
-  - 地位： `[x]` 完畢， `[ ]` 準備好， `[-]` 被阻止
-  - 顏色：綠色（完成）、黃色（就緒）、紅色（阻塞）
-- **JSON** (`--json`)：機器可讀的腳本和代理
+- **Default**: Human-readable text with visual indicators
+  - Status: `[x]` done, `[ ]` ready, `[-]` blocked
+  - Colors: green (done), yellow (ready), red (blocked)
+- **JSON** (`--json`): Machine-readable for scripts and agents
 
-### 錯誤處理
+### Error Handling
 
-- 遺失的 `--change`：列出可用變更時出錯
+- Missing `--change`: Error listing available changes
 - Unknown change: Error with suggestion
-- 未知工件：列出有效工件時發生錯誤
-- 缺少架構：架構解析詳細資訊錯誤
+- Unknown artifact: Error listing valid artifacts
+- Missing schema: Error with schema resolution details
 
-## 風險/權衡
+## Risks / Trade-offs
 
-| 風險 | 減輕 |
+| Risk | Mitigation |
 |------|------------|
-| 頂級指令污染命名空間 | 命令是不同的；隔離，易於移除 |
-| `status` 與 git 混淆 | 情境 (`--change`）說得很清楚 |
-| 功能不起作用 | 單一檔案刪除會刪除所有內容 |
+| Top-level commands pollute namespace | Commands are distinct; isolated for easy removal |
+| `status` confused with git | Context (`--change`) makes it clear |
+| Feature doesn't work out | Single file deletion removes everything |
 
-## 實施說明
+## Implementation Notes
 
-- 所有命令都在 `src/commands/artifact-workflow.ts`
-- 進口自 `src/core/artifact-graph/` 對於所有操作
-- 用途 `getActiveChangeIds()` 從 `item-discovery.ts` 用於更改列表
-- 遵循現有的 CLI 模式（ora spinners、commander.js 選項）
-- 幫助文字將命令標記為“實驗”
+- All commands in `src/commands/artifact-workflow.ts`
+- Imports from `src/core/artifact-graph/` for all operations
+- Uses `getActiveChangeIds()` from `item-discovery.ts` for change listing
+- Follows existing CLI patterns (ora spinners, commander.js options)
+- Help text marks commands as "Experimental"
